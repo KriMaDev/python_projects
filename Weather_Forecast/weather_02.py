@@ -408,61 +408,70 @@ def show_forecast_results(city):
     wapi_d  = fetch_weatherapi(city)
     wstk_d  = fetch_weatherstack(city)
 
-    if openw_d and wapi_d and wstk_d:
+    if openw_d or wapi_d or wstk_d:
         print(Fore.LIGHTBLUE_EX + f"\n| Weather forecast for {city.capitalize()} at {time.strftime('%d/%m/%Y %H:%M:%S')} |\n"
               "\n| Selected data from all sources used for the report |\n")
 
         # OpenWeather Data Printing
-        print(Fore.LIGHTBLUE_EX + f"        | OpenWeather |\n\n"
-              f"Condition         : {openw_d['condition']}\n"
-              f"Temperature       : {openw_d['temp']} °C\n"
-              f"Feels Like        : {openw_d['feels']} °C\n"
-              f"Lowest  °C        : {openw_d['low']} °C\n"
-              f"Highest °C        : {openw_d['high']} °C\n"
-              f"Humidity          : {openw_d['humidity']} %\n"
-              f"Sea Pressure      : {openw_d['s_pressure']} hPa\n"
-              f"Ground Pressure   : {openw_d['g_pressure']} hPa\n"
-              f"Visibillity       : {openw_d['vision']} km\n"
-              f"Wind Speed        : {openw_d['w_spd']:.2f} /kmh\n"
-              f"Rain              : {openw_d['rain']}\n"
-        )
+        if openw_d:
+            print(Fore.LIGHTBLUE_EX + f"        | OpenWeather |\n\n"
+                f"Condition         : {openw_d['condition']}\n"
+                f"Temperature       : {openw_d['temp']} °C\n"
+                f"Feels Like        : {openw_d['feels']} °C\n"
+                f"Lowest  °C        : {openw_d['low']} °C\n"
+                f"Highest °C        : {openw_d['high']} °C\n"
+                f"Humidity          : {openw_d['humidity']} %\n"
+                f"Sea Pressure      : {openw_d['s_pressure']} hPa\n"
+                f"Ground Pressure   : {openw_d['g_pressure']} hPa\n"
+                f"Visibillity       : {openw_d['vision']} km\n"
+                f"Wind Speed        : {openw_d['w_spd']:.2f} /kmh\n"
+                f"Rain              : {openw_d['rain']}\n"
+            )
+        else:
+            print(Fore.RED + f"ERROR_10: Couldn't fetch OpenWeather!\n")
 
         # WeatherAPI Data Printing
-        print(Fore.LIGHTBLUE_EX + f"        | WeatherAPI |\n\n"
-              f"Condition         : {wapi_d['condition']}\n"
-              f"Temperature       : {wapi_d['temp']} °C\n"
-              f"Feels Like        : {wapi_d['feels']} °C\n"
-              f"Humidity          : {wapi_d['humidity']} %\n"
-              f"Pressure          : {wapi_d['mbar_p']} mbar\n" 
-              f"Visibility        : {wapi_d['vision']} km\n"      
-              f"Region            : {wapi_d['region']}\n"
-              f"Country           : {wapi_d['country']}\n"
-              f"Local Time        : {wapi_d['localtime']}\n"
-              f"Latitude          : {wapi_d['lat']}\n"
-              f"Longtitude        : {wapi_d['lon']}\n"
-              f"Wind Speed        : {wapi_d['w_spd']} /kmh\n"
-              f"Wind Temperature  : {wapi_d['w_temp']} °C\n"
-              f"Wind Degree       : {wapi_d['w_deg']} °\n"
-              f"Wind Direction    : {wapi_d['w_dir']}\n"
-              f"Gust Speed        : {wapi_d['gust_spd']} m/s\n"
-              f"UV Index          : {wapi_d['uv']}\n"
-              f"Rain              : {wapi_d['rain']}\n"
-        )
+        if wapi_d:
+            print(Fore.LIGHTBLUE_EX + f"        | WeatherAPI |\n\n"
+                f"Condition         : {wapi_d['condition']}\n"
+                f"Temperature       : {wapi_d['temp']} °C\n"
+                f"Feels Like        : {wapi_d['feels']} °C\n"
+                f"Humidity          : {wapi_d['humidity']} %\n"
+                f"Pressure          : {wapi_d['mbar_p']} mbar\n" 
+                f"Visibility        : {wapi_d['vision']} km\n"      
+                f"Region            : {wapi_d['region']}\n"
+                f"Country           : {wapi_d['country']}\n"
+                f"Local Time        : {wapi_d['localtime']}\n"
+                f"Latitude          : {wapi_d['lat']}\n"
+                f"Longtitude        : {wapi_d['lon']}\n"
+                f"Wind Speed        : {wapi_d['w_spd']} /kmh\n"
+                f"Wind Temperature  : {wapi_d['w_temp']} °C\n"
+                f"Wind Degree       : {wapi_d['w_deg']} °\n"
+                f"Wind Direction    : {wapi_d['w_dir']}\n"
+                f"Gust Speed        : {wapi_d['gust_spd']} m/s\n"
+                f"UV Index          : {wapi_d['uv']}\n"
+                f"Rain              : {wapi_d['rain']}\n"
+            )
+        else:
+            print(Fore.RED + f"ERROR_11: Couldn't fetch WeatherAPI!\n")
 
         # WeatherStack Data Printing
-        print(Fore.LIGHTBLUE_EX + f"        | WeatherStack |\n\n"
-              f"Condition         : {wstk_d['condition']}\n"
-              f"Temperature       : {wstk_d['temp']} °C\n"
-              f"Feels Like        : {wstk_d['feels']} °C\n"
-              f"Humidity          : {wstk_d['humidity']} %\n"
-              f"Pressure          : {wstk_d['pressure']} mbar\n"
-              f"Visibility        : {wstk_d['vision']} km\n"
-              f"Wind Speed        : {wstk_d['w_spd']} /kmh\n"
-              f"Wind Degree       : {wstk_d['w_deg']} °\n"
-              f"Wind Direction    : {wstk_d['w_dir']}\n"
-              f"UV Index          : {wstk_d['uv']}\n"
-              f"Rain              : {wstk_d['rain']}\n"
-        )
+        if wstk_d:
+            print(Fore.LIGHTBLUE_EX + f"        | WeatherStack |\n\n"
+                f"Condition         : {wstk_d['condition']}\n"
+                f"Temperature       : {wstk_d['temp']} °C\n"
+                f"Feels Like        : {wstk_d['feels']} °C\n"
+                f"Humidity          : {wstk_d['humidity']} %\n"
+                f"Pressure          : {wstk_d['pressure']} mbar\n"
+                f"Visibility        : {wstk_d['vision']} km\n"
+                f"Wind Speed        : {wstk_d['w_spd']} /kmh\n"
+                f"Wind Degree       : {wstk_d['w_deg']} °\n"
+                f"Wind Direction    : {wstk_d['w_dir']}\n"
+                f"UV Index          : {wstk_d['uv']}\n"
+                f"Rain              : {wstk_d['rain']}\n"
+            )
+        else:
+            print(Fore.RED + f"ERROR_12: Couldn't fetch WeatherStack!\n")
         
         # Compare Data From All Forecasts
         compare_forecasts(openw_d, wapi_d, wstk_d)
@@ -470,7 +479,7 @@ def show_forecast_results(city):
         calc_average(openw_d, wapi_d, wstk_d)
 
     else:
-        print(Fore.RED + f"ERROR_10: Fetching weather data from one or more sources.")
+        print(Fore.RED + f"ERROR_13: Couldn't fetch anything...\n")
         return None
 
 # =======================================================================================================================
