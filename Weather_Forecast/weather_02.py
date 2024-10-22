@@ -57,7 +57,7 @@ def fetch_weatherapi(city):
         # Get full data
         response = requests.get(url)
         data     = response.json()
-        # print(f"WeatherAPI response:\n{data}\n")
+        print(f"WeatherAPI response:\n{data}\n")
         # Create needed vars with data
         region    = data['location']['region']
         country   = data['location']['country']
@@ -447,7 +447,7 @@ def show_forecast_results(city):
                 f"Wind Temperature  : {wapi_d['w_temp']} °C\n"
                 f"Wind Degree       : {wapi_d['w_deg']} °\n"
                 f"Wind Direction    : {wapi_d['w_dir']}\n"
-                f"Gust Speed        : {wapi_d['gust_spd']} m/s\n"
+                f"Gust Speed        : {wapi_d['gust_spd']} /kmh\n"
                 f"UV Index          : {wapi_d['uv']}\n"
                 f"Rain              : {wapi_d['rain']}\n"
             )
