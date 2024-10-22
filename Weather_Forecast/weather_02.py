@@ -120,7 +120,7 @@ def fetch_weatherstack(city):
         if 'success' in data and data['success'] is False:
             raise Exception(data['error']['info'])
     
-        # print(f"Weatherstack response:\n{data}\n")
+        #print(f"Weatherstack response:\n{data}\n")
         
         # Extract relevant data from the response
         temperature = data['current']['temperature']
@@ -358,7 +358,7 @@ def compare_future_forecasts(forecast1, forecast2, forecast_type='hourly'):
                 pressure2 = forecast2[i].get('pressure')
 
             # Print comparison
-            print(Fore.LIGHTCYAN_EX + f"\n"
+            print(Fore.LIGHTBLUE_EX + f"\n"
                 f"Date                       : {time1}\n"
                 f"Temperature Difference     : {abs(temp1 - temp2):.2f}°C      (Avg: {(temp1 + temp2) / 2:.2f} °C)\n"
                 f"Conditions                 : {condition1} vs {condition2}\n"
@@ -369,7 +369,6 @@ def compare_future_forecasts(forecast1, forecast2, forecast_type='hourly'):
     except Exception as e:
         print(Fore.RED + f"ERROR_08: Comparing future forecast data: {e}")
         return None
-
 
 # Calculate average results
 def calc_average(openw_d, wapi_d, wstk_d):
@@ -486,22 +485,35 @@ def show_forecast_results(city):
 #                                                                                                                    MAIN
 # =======================================================================================================================
 
-city = input(str(Fore.LIGHTBLUE_EX + f"Enter name of city : "))
+city = input(str(Fore.LIGHTBLUE_EX + f"Enter name of city\n: "))
 show_forecast_results(city)
 
 # Fetch hourly forecasts
-hourly_forecasts = fetch_hourly_forecasts(city)
-#print(hourly_forecasts)
-compare_future_forecasts(hourly_forecasts["weatherapi"], hourly_forecasts["openweather"], forecast_type="hourly")
+passed = False
+print("\n\n")
+while not passed:
+    hour = input(str(Fore.LIGHTBLUE_EX + f"Do you want to see the hourly forecast for today? ({time.strftime('%d/%m/%Y')})\n: "))
+    yeah = {"yes", "y", "YES", "Y"}
+    nah  = {"no", "n", "NO", "N"}
+    if hour in yeah:
+        hourly_forecasts = fetch_hourly_forecasts(city)
+        compare_future_forecasts(hourly_forecasts["weatherapi"], hourly_forecasts["openweather"], forecast_type="hourly")
+        passed = True
+        #print(hourly_forecasts)
+    elif hour in nah:
+        print(Fore.LIGHTBLUE_EX + f"You do not want to see the hourly forecast.")
+        passed = True
+    else:
+        print(Fore.RED + f"Please enter a proper value! (yes, y, YES, Y, no, n, NO, N)")
 
 # Fetch daily forecasts
-daily_forecasts = fetch_daily_forecasts(city)
+#daily_forecasts = fetch_daily_forecasts(city)
+#compare_future_forecasts(daily_forecasts["weatherapi"], daily_forecasts["openweather"], forecast_type="daily")
 #print(daily_forecasts)
-compare_future_forecasts(daily_forecasts["weatherapi"], daily_forecasts["openweather"], forecast_type="daily")
 
 # Increment the counter at the end of your program
 execution_count = increment_counter()
-print(Fore.LIGHTCYAN_EX + f"\n\nProgram executed {execution_count} times.")
+print(Fore.LIGHTCYAN_EX + f"\nProgram executed {execution_count} times.")
 
 # TODO: Add city 2 and create comparison between the results generated for both cities
 #city02 = input(str(Fore.LIGHTBLUE_EX + f"Enter name of second city : "))
