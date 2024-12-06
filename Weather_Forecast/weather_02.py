@@ -237,7 +237,7 @@ def fetch_daily_forecasts(city):
     except Exception as e:
         print(Fore.RED + f"ERROR_05: Fetching daily forecast from WeatherAPI: {e}")
         return None
-
+    '''
     try:
         # Use OpenWeather One Call API for daily forecasts
         openweather_url = f"https://api.openweathermap.org/data/2.5/onecall?lat={wapi_data['location']['lat']}&lon={wapi_data['location']['lon']}&exclude=hourly,minutely&appid={OPENWEATHER_API_KEY}&units=metric"
@@ -246,12 +246,13 @@ def fetch_daily_forecasts(city):
     except Exception as e:
         print(Fore.RED + f"ERROR_06: Fetching daily forecast from OpenWeather: {e}")
         return None
-
-    #print(f"\n\n{wapi_data} \n--------\n{openw_data}\n\n") # TODO OpenWeather Data is not received ok!!
+    print(f"\n\n{wapi_data} \n--------\n{openw_data}\n\n") # TODO OpenWeather Data is not received ok!!
     return {
         "weatherapi": wapi_data.get("forecast", {}).get("forecastday", []),
         "openweather": openw_data.get("daily", [])
     }
+    '''
+    return {"weatherapi": wapi_data.get("forecast", {}).get("forecastday", [])}
 
 # Comparison between forecasts
 def compare_forecasts(openw_d, wapi_d, wstk_d):
@@ -489,33 +490,47 @@ city = input(str(Fore.LIGHTBLUE_EX + f"Enter name of city\n: "))
 show_forecast_results(city)
 
 # Fetch hourly forecasts
-passed = False
+pass_h = False
 print("\n\n")
-while not passed:
+while not pass_h:
     hour = input(str(Fore.LIGHTBLUE_EX + f"Do you want to see the hourly forecast for today? ({time.strftime('%d/%m/%Y')})\n: "))
     yeah = {"yes", "y", "YES", "Y"}
     nah  = {"no", "n", "NO", "N"}
     if hour in yeah:
         hourly_forecasts = fetch_hourly_forecasts(city)
         compare_future_forecasts(hourly_forecasts["weatherapi"], hourly_forecasts["openweather"], forecast_type="hourly")
-        passed = True
+        pass_h = True
         #print(hourly_forecasts)
     elif hour in nah:
         print(Fore.LIGHTBLUE_EX + f"You do not want to see the hourly forecast.")
-        passed = True
+        pass_h = True
     else:
         print(Fore.RED + f"Please enter a proper value! (yes, y, YES, Y, no, n, NO, N)")
 
 # Fetch daily forecasts
-#daily_forecasts = fetch_daily_forecasts(city)
-#compare_future_forecasts(daily_forecasts["weatherapi"], daily_forecasts["openweather"], forecast_type="daily")
-#print(daily_forecasts)
+pass_d = False
+print("\n\n")
+while not pass_d:
+    day  = input(str(Fore.LIGHTBLUE_EX + f"Do you want to see tomorrow's forecast? (NOT YET WORKING :))\n: "))
+    yea  = {"yes", "y", "YES", "Y"}
+    nah  = {"no", "n", "NO", "N"}
+    if day in yea:
+        daily_forecasts = fetch_daily_forecasts(city)
+        # compare_future_forecasts(daily_forecasts["weatherapi"], daily_forecasts["openweather"], forecast_type="daily") # Cannot fetch OpenWeather daily data
+        pass_d = True
+        #print(daily_forecasts)
+    elif day in nah:
+        print(Fore.LIGHTBLUE_EX + f"You do not want to see tomorrow's forecast.")
+        pass_d = True
+    else:
+        print(Fore.RED + f"Please enter a proper value! (yes, y, YES, Y, no, n, NO, N)")
 
 # Increment the counter at the end of your program
 execution_count = increment_counter()
 print(Fore.LIGHTCYAN_EX + f"\nProgram executed {execution_count} times.")
 
 # TODO: Add city 2 and create comparison between the results generated for both cities
+# !!! Number of cities being checked per run is equal to number of API calls (Counter is not!)
 #city02 = input(str(Fore.LIGHTBLUE_EX + f"Enter name of second city : "))
 #show_forecast_results(city02)
 
@@ -524,3 +539,5 @@ print(Fore.LIGHTCYAN_EX + f"\nProgram executed {execution_count} times.")
 #location_key = fetch_accuweather_location(city)
 #if location_key:
 #    weather_data = fetch_accuweather_weather(location_key)
+
+# TODO: Fix OpenWeather daily data not being fetched so I can do a comparisson!
