@@ -57,7 +57,7 @@ def fetch_weatherapi(city):
         # Get full data
         response = requests.get(url)
         data     = response.json()
-        print(f"WeatherAPI response:\n{data}\n")
+        # print(f"WeatherAPI response:\n{data}\n")
         # Create needed vars with data
         region    = data['location']['region']
         country   = data['location']['country']
@@ -494,9 +494,9 @@ pass_h = False
 print("\n\n")
 while not pass_h:
     hour = input(str(Fore.LIGHTBLUE_EX + f"Do you want to see the hourly forecast for today? ({time.strftime('%d/%m/%Y')})\n: "))
-    yeah = {"yes", "y", "YES", "Y"}
+    yea  = {"yes", "y", "YES", "Y"}
     nah  = {"no", "n", "NO", "N"}
-    if hour in yeah:
+    if hour in yea:
         hourly_forecasts = fetch_hourly_forecasts(city)
         compare_future_forecasts(hourly_forecasts["weatherapi"], hourly_forecasts["openweather"], forecast_type="hourly")
         pass_h = True
@@ -518,7 +518,7 @@ while not pass_d:
         daily_forecasts = fetch_daily_forecasts(city)
         # compare_future_forecasts(daily_forecasts["weatherapi"], daily_forecasts["openweather"], forecast_type="daily") # Cannot fetch OpenWeather daily data
         pass_d = True
-        #print(daily_forecasts)
+        # print(daily_forecasts)
     elif day in nah:
         print(Fore.LIGHTBLUE_EX + f"You do not want to see tomorrow's forecast.")
         pass_d = True
