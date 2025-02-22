@@ -16,5 +16,5 @@ coins = get_coin_list()
 if coins:
     cc = 1
     for coin in coins:  # for coin in coins[:100]:  For limited number of results
-        print(f"{cc} | Name: {coin['name']}         |       ID: {coin['id']}")
+        print(f"Number: {cc} | ID: {coin['id']} | Symbol: {coin['symbol']} | Name: {coin['name']} ")
         cc += 1
