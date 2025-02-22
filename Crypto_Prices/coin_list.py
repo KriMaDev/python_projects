@@ -15,6 +15,9 @@ coins = get_coin_list()
 # Print coins to check their IDs
 if coins:
     cc = 1
-    for coin in coins:  # for coin in coins[:100]:  For limited number of results
-        print(f"Number: {cc} | ID: {coin['id']} | Symbol: {coin['symbol']} | Name: {coin['name']} ")
+    print("{:<20} {:<20} {:<60} {:<40}".format("Number", "Symbol", "ID", "Name"))
+    print("="*140)
+    for coin in coins[:9001]:  # Limited at 9001 because thats my terminal buffer size
+        # print(f"Number: {cc} | ID: {coin['id']} | Symbol: {coin['symbol']} | Name: {coin['name']} ")
+        print("{:<20} {:<20} {:<60} {:<40}".format(cc, coin['symbol'], coin['id'], coin['name']))
         cc += 1

@@ -29,7 +29,3 @@ except requests.exceptions.RequestException as e:
 except KeyError:
     print("Unexpected response format. The API might have changed.")
 
-{'success': True, 'found': True, 'macPrefix': '2028BC', 'company': 'Visionscape Co,. Ltd.', 
-'address': '503, 145, Gasan Digital 1-ro, Geumcheon-gu,, Seoul Korea 153-787, KR', 'country': 'KR',
- 'blockStart': '2028BC000000', 'blockEnd': '2028BCFFFFFF', 'blockSize': 16777215, 'blockType': 'MA-L',
-  'updated': '2015-11-17', 'isRand': False, 'isPrivate': False}
