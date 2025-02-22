@@ -1,7 +1,7 @@
 import requests
 from colorama import Fore, init
 import time
-from  key_consts import OPENWEATHER_API_KEY, WEATHERAPI_API_KEY, WEATHERSTACK_API_KEY, increment_counter
+from  key_consts import OPENWEATHER_API_KEY, WEATHERAPI_API_KEY, WEATHERSTACK_API_KEY
 
 # Initialize colorama for Windows compatibility
 init(autoreset=True)
@@ -525,9 +525,7 @@ while not pass_d:
     else:
         print(Fore.RED + f"Please enter a proper value! (yes, y, YES, Y, no, n, NO, N)")
 
-# Increment the counter at the end of your program
-execution_count = increment_counter()
-print(Fore.LIGHTCYAN_EX + f"\nProgram executed {execution_count} times.")
+print(Fore.LIGHTCYAN_EX + f"\nProgram execution successful.")
 
 # TODO: Add city 2 and create comparison between the results generated for both cities
 # !!! Number of cities being checked per run is equal to number of API calls (Counter is not!)
