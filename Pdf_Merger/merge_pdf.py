@@ -26,5 +26,5 @@ def merge_pdfs(directory, output_filename="output.pdf"):
     print(Fore.LIGHTGREEN_EX + f"All PDFs merged into {output_filename}")
 
 # Usage
-directory = "C:\python\general_scripts\pdf_merger"  # Replace with your directory containing PDF files
+directory = "C:\\git_reps\\Python_Scripts_Repo\\Pdf_Merger"  # Replace with your directory containing PDF files
 merge_pdfs(directory)
