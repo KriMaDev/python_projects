@@ -8,11 +8,12 @@ url = f"https://api.maclookup.app/v2/macs/{mac_address}"
 try:
     # Send the GET request
     response = requests.get(url)
-    response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
+    response.raise_for_status()  # Raise an HTTP Error for bad responses (4xx and 5xx)
 
     # Parse the JSON response
     data = response.json()
     # print(data)
+    print(f"For MAC Address {mac_address}")
     print(f"Exists & Found: {data['success']} & {data['found']}")
     print(f"Random & Private: {data['isRand']} & {data['isPrivate']}")
     print(f"Company: {data['company']}")
