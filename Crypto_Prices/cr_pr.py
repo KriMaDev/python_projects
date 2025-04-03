@@ -37,7 +37,7 @@ def fetch_prices():
             response.raise_for_status()
             data     = response.json()
 
-            #print("API response:", data)  # For debugging
+            # print("API response:", data)  # For debugging
 
             # Get the current prices (as raw numerical values)
             current_prices = {
