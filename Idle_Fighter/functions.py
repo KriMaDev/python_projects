@@ -16,7 +16,8 @@ def chooseCharacter():
                         name      = "Gipsy Smacker"
                         spec      = "Melee"
                         damage    = 15
-                        crit_rate = 30
+                        crit_chan = 0.15
+                        crit_rate = 3
                         health    = 100
                         mana      = 50
                         shield    = 50
@@ -27,7 +28,8 @@ def chooseCharacter():
                         name      = "Cum Archer"
                         spec      = "Ranged"
                         damage    = 20
-                        crit_rate = 35
+                        crit_chan = 0.25
+                        crit_rate = 3.5
                         health    = 50
                         mana      = 75
                         shield    = 50
@@ -38,7 +40,8 @@ def chooseCharacter():
                         name      = "Reto Fatso"
                         spec      = "Tank"
                         damage    = 7.5
-                        crit_rate = 15
+                        crit_chan = 0.15
+                        crit_rate = 4.5
                         health    = 150
                         mana      = 25
                         shield    = 150
@@ -49,7 +52,8 @@ def chooseCharacter():
                         name      = "Mery Jane"
                         spec      = "Support"
                         damage    = 12
-                        crit_rate = 25
+                        crit_chan = 0.35
+                        crit_rate = 2.5
                         health    = 75
                         mana      = 75
                         shield    = 100
@@ -60,7 +64,8 @@ def chooseCharacter():
                         name      = "Mister Ladybug"
                         spec      = "Assassin"
                         damage    = 35
-                        crit_rate = 45
+                        crit_chan = 0.45
+                        crit_rate = 4
                         health    = 25
                         mana      = 75
                         shield    = 25
@@ -71,7 +76,8 @@ def chooseCharacter():
                         name      = "Perry Hotter"
                         spec      = "Mage"
                         damage    = 25
-                        crit_rate = 40
+                        crit_chan = 0.55
+                        crit_rate = 2.5
                         health    = 25
                         mana      = 100
                         shield    = 150
@@ -82,7 +88,8 @@ def chooseCharacter():
                         name      = "Asmodeus"
                         spec      = "Debuffer"
                         damage    = 17.5
-                        crit_rate = 30
+                        crit_chan = 0.40
+                        crit_rate = 3
                         health    = 75
                         mana      = 75
                         shield    = 100
@@ -91,7 +98,7 @@ def chooseCharacter():
                         s_regen   = 0.5
                     case _:
                         print("The class you selected is invalid.")
-                player = Character(name, spec, damage, crit_rate, health, mana, shield, h_regen, m_regen, s_regen)
+                player = Character(name, spec, damage, crit_rate, crit_chan, health, mana, shield, h_regen, m_regen, s_regen)
                 return player
             else:
                 print("Please choose from predefined classes!")
