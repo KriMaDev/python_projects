@@ -1,5 +1,6 @@
 from scapy.all import ARP, Ether, srp
 import socket
+# You will also have to download and install npcap to run this script
 
 def scan_network(ip_range):
     print("Scanning the network...")
