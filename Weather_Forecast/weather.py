@@ -494,8 +494,8 @@ pass_h = False
 print("\n\n")
 while not pass_h:
     hour = input(str(Fore.LIGHTBLUE_EX + f"Do you want to see the hourly forecast for today? ({time.strftime('%d/%m/%Y')})\n: "))
-    yea  = {"yes", "y", "YES", "Y"}
-    nah  = {"no", "n", "NO", "N"}
+    yea  = {"yes", "y", "YES", "Y", "1", "True"}
+    nah  = {"no", "n", "NO", "N", "0", "False"}
     if hour in yea:
         hourly_forecasts = fetch_hourly_forecasts(city)
         compare_future_forecasts(hourly_forecasts["weatherapi"], hourly_forecasts["openweather"], forecast_type="hourly")
