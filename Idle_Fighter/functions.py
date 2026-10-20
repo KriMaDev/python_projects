@@ -13,7 +13,7 @@ def chooseCharacter():
             if (spec in specs_arr):
                 match spec:
                     case "Melee":
-                        name      = "Gipsy Smacker"
+                        name      = "Sir Smacks-a-Lot"
                         spec      = "Melee"
                         damage    = 15
                         crit_chan = 0.15
@@ -25,7 +25,7 @@ def chooseCharacter():
                         m_regen   = 0.5
                         s_regen   = 1
                     case "Ranged":
-                        name      = "Cum Archer"
+                        name      = "Robin Hoodie"
                         spec      = "Ranged"
                         damage    = 20
                         crit_chan = 0.25
@@ -37,7 +37,7 @@ def chooseCharacter():
                         m_regen   = 1
                         s_regen   = 0.7
                     case "Tank":
-                        name      = "Reto Fatso"
+                        name      = "Captain Bulwark"
                         spec      = "Tank"
                         damage    = 7.5
                         crit_chan = 0.15
@@ -49,7 +49,7 @@ def chooseCharacter():
                         m_regen   = 1.5
                         s_regen   = 2
                     case "Support":
-                        name      = "Mery Jane"
+                        name      = "Medic Molly"
                         spec      = "Support"
                         damage    = 12
                         crit_chan = 0.35
