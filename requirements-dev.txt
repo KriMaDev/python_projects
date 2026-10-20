@@ -1,0 +1,10 @@
+# Everything needed to run all tools, the tests and the linter:
+#   pip install -r requirements-dev.txt
+-r Crypto_Prices/requirements.txt
+-r Idle_Fighter/requirements.txt
+-r Network_Scanner/requirements.txt
+-r Pdf_Merger/requirements.txt
+-r Weather_Forecast/requirements.txt
+
+pytest>=8.0
+ruff>=0.6
