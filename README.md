@@ -13,7 +13,7 @@ does one useful job from the command line, and has its own README with setup ste
 | [Idle_Fighter](Idle_Fighter/) | Text-based auto battler: pick a class and fight a boss (my first OOP project) | standard library only |
 | [Network_Scanner](Network_Scanner/) | Find devices on your LAN, look up IP owners and VPNs, identify MAC vendors | scapy, ipwhois, requests |
 | [Pdf_Merger](Pdf_Merger/) | Merge all PDFs in a folder into one file | pypdf, colorama |
-| [Weather_Forecast](Weather_Forecast/) | Compare current weather and hourly forecasts from three weather APIs | requests, python-dotenv, colorama |
+| [Weather_Forecast](Weather_Forecast/) | Compare current weather from three weather APIs and the 24-hour forecast from two of them | requests, python-dotenv, colorama |
 
 ## Setup
 

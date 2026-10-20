@@ -1,7 +1,7 @@
 # Weather Forecast
 
 Asks three weather services for the current weather in a city, prints each report, shows where they
-agree or disagree, and calculates the average. It can also compare today's hourly forecast from two of them.
+agree or disagree, and calculates the average. It can also compare the forecast for the next 24 hours from two of them, every 3 hours.
 
 Providers: [OpenWeather](https://openweathermap.org/api), [WeatherAPI](https://www.weatherapi.com/) and
 [Weatherstack](https://weatherstack.com/). All three have a free plan.
@@ -10,7 +10,7 @@ Providers: [OpenWeather](https://openweathermap.org/api), [WeatherAPI](https://w
 |---|---|
 | `weather.py` | **Entry point**: arguments, prompts, overall flow |
 | `openweather.py`, `weatherapi.py`, `weatherstack.py` | One module per provider: fetch the current weather and parse the response |
-| `forecasts.py` | Hourly (and the unfinished daily) forecasts |
+| `forecasts.py` | Hourly forecasts, matched by time across providers (plus the unfinished daily forecast) |
 | `display.py` | Printing the reports, the comparison and the average |
 | `api_client.py` | Shared request helper: timeout and error messages that never contain your API key |
 | `config.py` | Loads the API keys from `.env` |
@@ -45,14 +45,21 @@ Providers: [OpenWeather](https://openweathermap.org/api), [WeatherAPI](https://w
 ## How to run
 
 ```bash
-python Weather_Forecast/weather.py                       # asks for the city and the hourly forecast
-python Weather_Forecast/weather.py Brussels              # asks only about the hourly forecast
-python Weather_Forecast/weather.py Brussels --hourly     # current weather and hourly comparison
+python Weather_Forecast/weather.py                       # asks for the city and the 24-hour forecast
+python Weather_Forecast/weather.py Brussels              # asks only about the 24-hour forecast
+python Weather_Forecast/weather.py Brussels --hourly     # current weather and 24-hour comparison
 python Weather_Forecast/weather.py "New York" --no-hourly
 python Weather_Forecast/weather.py --help
 ```
 
-Every run uses 3 API calls, plus 2 more for the hourly forecast.
+Every run uses 3 API calls, plus 2 more for the 24-hour forecast.
+
+### How the 24-hour comparison works
+
+OpenWeather's free forecast has one entry every 3 hours, and WeatherAPI has one every hour. Each OpenWeather
+entry is paired with the WeatherAPI hour closest to it, using the Unix timestamp both APIs return. Their
+readable times can't be used for this, because WeatherAPI gives the city's local time and OpenWeather gives UTC.
+OpenWeather's wind speed (m/s) is converted to km/h before comparing. The times shown are local to the city.
 
 ## Example output
 
