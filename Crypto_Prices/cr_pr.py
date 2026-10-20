@@ -8,7 +8,7 @@ import requests
 from colorama import Fore, init
 
 API_URL         = "https://api.coingecko.com/api/v3/simple/price"
-DEFAULT_COINS   = "bitcoin,ethereum,cronos,pepe,pax-gold"
+DEFAULT_COINS   = "bitcoin,ethereum,crypto-com-chain,pepe,pax-gold"
 REQUEST_TIMEOUT = 10
 
 # Create a global stop flag
