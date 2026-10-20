@@ -98,7 +98,7 @@ def main() -> None:
     # Initialize colorama for Windows compatibility
     init(autoreset=True)
 
-    print(f"\n\nTo exit the program please press 'esc'\nCoins: {', '.join(coins)}\n")
+    print(f"\n\nTo exit the program please press 'esc' (or Ctrl+C)\nCoins: {', '.join(coins)}\n")
     # Start fetching prices and listening for exit key in separate threads
     cash_thread  = threading.Thread(target=fetch_prices, args=(coins, args.interval))
     exit_thread  = threading.Thread(target=listen_for_exit, daemon=True)
