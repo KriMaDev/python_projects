@@ -1,11 +1,14 @@
 """API keys and settings for the weather providers, loaded from a .env file."""
 import os
+from pathlib import Path
 
 from colorama import Fore
 from dotenv import load_dotenv
 
-# Looks for .env in this folder first, then in the parent folders
-load_dotenv()
+# Real environment variables win, then Weather_Forecast/.env, then .env in the repository root
+TOOL_DIR = Path(__file__).resolve().parent
+load_dotenv(TOOL_DIR / ".env")
+load_dotenv(TOOL_DIR.parent / ".env")
 
 OPENWEATHER_API_KEY  = os.getenv("OPENWEATHER_API_KEY", "").strip()
 WEATHERAPI_API_KEY   = os.getenv("WEATHERAPI_API_KEY", "").strip()
