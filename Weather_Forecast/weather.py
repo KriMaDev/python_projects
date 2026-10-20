@@ -8,7 +8,7 @@ init(autoreset=True)
 
 # Fetch weather from OpenWeather
 def fetch_openweather(city):
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={OPENWEATHER_API_KEY}&units=metric"
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={OPENWEATHER_API_KEY}&units=metric"
     try:
         # Get full data
         response = requests.get(url)
@@ -52,7 +52,7 @@ def fetch_openweather(city):
 
 # Fetch weather from WeatherAPI
 def fetch_weatherapi(city):
-    url = f"http://api.weatherapi.com/v1/current.json?key={WEATHERAPI_API_KEY}&q={city}"
+    url = f"https://api.weatherapi.com/v1/current.json?key={WEATHERAPI_API_KEY}&q={city}"
     try:
         # Get full data
         response = requests.get(url)
@@ -112,6 +112,7 @@ def fetch_weatherapi(city):
 
 # Fetch weather from WeatherStack
 def fetch_weatherstack(city):
+    # Weatherstack free plan does not allow HTTPS, so this key is sent unencrypted.
     url = f"http://api.weatherstack.com/current?access_key={WEATHERSTACK_API_KEY}&query={city}"
     try:
         response = requests.get(url)
@@ -167,7 +168,7 @@ def fetch_weatherstack(city):
 # Fetch weather from AccuWeather
 '''
 def fetch_accuweather_location(city):
-    url = f"http://dataservice.accuweather.com/locations/v1/cities/search?q={city}&apikey={ACCUWEATHER_API_KEY}"
+    url = f"https://dataservice.accuweather.com/locations/v1/cities/search?q={city}&apikey={ACCUWEATHER_API_KEY}"
     try:
         response = requests.get(url)
         data = response.json()
@@ -185,7 +186,7 @@ def fetch_accuweather_location(city):
         return None
 
 def fetch_accuweather_weather(location_key):
-    url = f"http://dataservice.accuweather.com/currentconditions/v1/{location_key}?apikey={ACCUWEATHER_API_KEY}"
+    url = f"https://dataservice.accuweather.com/currentconditions/v1/{location_key}?apikey={ACCUWEATHER_API_KEY}"
     try:
         response = requests.get(url)
         data = response.json()
@@ -206,7 +207,7 @@ def fetch_accuweather_weather(location_key):
 def fetch_hourly_forecasts(city):
     try:
         # Fetch hourly forecast from WeatherAPI
-        weatherapi_url  = f"http://api.weatherapi.com/v1/forecast.json?key={WEATHERAPI_API_KEY}&q={city}&hours=24"
+        weatherapi_url  = f"https://api.weatherapi.com/v1/forecast.json?key={WEATHERAPI_API_KEY}&q={city}&hours=24"
         wapi_response   = requests.get(weatherapi_url)
         wapi_data       = wapi_response.json()
     except Exception as e:
@@ -215,7 +216,7 @@ def fetch_hourly_forecasts(city):
 
     try:
         # Fetch hourly forecast from OpenWeather
-        openweather_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={OPENWEATHER_API_KEY}&units=metric"
+        openweather_url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={OPENWEATHER_API_KEY}&units=metric"
         openw_response  = requests.get(openweather_url)
         openw_data      = openw_response.json()
     except Exception as e:
@@ -231,7 +232,7 @@ def fetch_hourly_forecasts(city):
 def fetch_daily_forecasts(city):
     try:
         # Fetch daily forecast from WeatherAPI
-        weatherapi_url  = f"http://api.weatherapi.com/v1/forecast.json?key={WEATHERAPI_API_KEY}&q={city}&days=3"
+        weatherapi_url  = f"https://api.weatherapi.com/v1/forecast.json?key={WEATHERAPI_API_KEY}&q={city}&days=3"
         wapi_response   = requests.get(weatherapi_url)
         wapi_data       = wapi_response.json()
     except Exception as e:
