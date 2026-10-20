@@ -73,60 +73,30 @@ def compare_forecasts(openw_d: Weather, wapi_d: Weather, wstk_d: Weather) -> Non
         print(Fore.RED + "ERROR_07: Comparing data")
         return None
 
-def compare_future_forecasts(forecast1: list[dict[str, Any]], forecast2: list[dict[str, Any]], forecast_type: str = 'hourly') -> None:
-    """Print the difference and average between two hourly or daily forecasts, entry by entry."""
-    print(Fore.LIGHTBLUE_EX + f"\n        | Future Average Forecast ({forecast_type}) |\n\n")
+def compare_hourly_forecasts(pairs: list[tuple[dict[str, Any], dict[str, Any]]]) -> None:
+    """Print the difference and average between WeatherAPI and OpenWeather for each matched forecast time."""
+    print(Fore.LIGHTBLUE_EX + "\n        | Future Average Forecast (next 24 hours) |\n\n")
 
-    try:
-        for i in range(min(len(forecast1), len(forecast2))):
-            if forecast_type == 'hourly':
-                # Extract hourly data
-                time1 = forecast1[i]['time'] if 'time' in forecast1[i] else forecast1[i].get('dt_txt')
-                temp1 = forecast1[i].get('temp_c', forecast1[i].get('main', {}).get('temp'))
-                temp2 = forecast2[i].get('temp_c', forecast2[i].get('main', {}).get('temp'))
-
-                condition1 = forecast1[i].get('condition', {}).get('text', forecast1[i].get('weather', [{}])[0].get('description'))
-                condition2 = forecast2[i].get('weather', [{}])[0].get('description')
-
-                wind_speed1 = forecast1[i].get('wind_kph', forecast1[i].get('wind', {}).get('speed'))
-                wind_speed2 = forecast2[i].get('wind', {}).get('speed')
-
-                humidity1 = forecast1[i].get('humidity')
-                humidity2 = forecast2[i].get('main', {}).get('humidity')
-
-                pressure1 = forecast1[i].get('pressure_mb', forecast1[i].get('main', {}).get('pressure'))
-                pressure2 = forecast2[i].get('main', {}).get('pressure')
-
-            elif forecast_type == 'daily':
-                # Extract daily data
-                time1 = forecast1[i].get('date')  # WeatherAPI date
-                temp1 = forecast1[i].get('day', {}).get('avgtemp_c', forecast1[i].get('temp', {}).get('day'))  # WeatherAPI temp
-                temp2 = forecast2[i].get('temp', {}).get('day')  # OpenWeather daily temp
-
-                condition1 = forecast1[i].get('day', {}).get('condition', {}).get('text')
-                condition2 = forecast2[i].get('weather', [{}])[0].get('description')
-
-                wind_speed1 = forecast1[i].get('day', {}).get('maxwind_kph')
-                wind_speed2 = forecast2[i].get('wind_speed')
-
-                humidity1 = forecast1[i].get('day', {}).get('avghumidity')
-                humidity2 = forecast2[i].get('humidity')
-
-                pressure1 = forecast1[i].get('day', {}).get('pressure_mb')
-                pressure2 = forecast2[i].get('pressure')
-
-            # Print comparison
-            print(Fore.LIGHTBLUE_EX + f"\n"
-                f"Date                       : {time1}\n"
-                f"Temperature Difference     : {abs(temp1 - temp2):.2f}°C      (Avg: {(temp1 + temp2) / 2:.2f} °C)\n"
-                f"Conditions                 : {condition1} vs {condition2}\n"
-                f"Wind Speed Difference      : {abs(wind_speed1 - wind_speed2):.2f} km/h   (Avg: {(wind_speed1 + wind_speed2) / 2:.2f} km/h)\n"
-                f"Humidity Difference        : {abs(humidity1 - humidity2):.2f}%        (Avg: {(humidity1 + humidity2) / 2:.2f}%)\n"
-                f"Pressure Difference        : {abs(pressure1 - pressure2):.2f} mbar   (Avg: {(pressure1 + pressure2) / 2:.2f} mbar)\n"
-                "\n")
-    except Exception as e:
-        print(Fore.RED + f"ERROR_08: Comparing future forecast data: {e}")
+    if not pairs:
+        print(Fore.RED + "ERROR_08: No forecast times from WeatherAPI and OpenWeather to compare.")
         return None
+
+    for wapi, openw in pairs:
+        temp1, temp2             = wapi['temp'], openw['temp']
+        wind_speed1, wind_speed2 = wapi['wind_kph'], openw['wind_kph']
+        humidity1, humidity2     = wapi['humidity'], openw['humidity']
+        pressure1, pressure2     = wapi['pressure'], openw['pressure']
+
+        # Print comparison
+        print(Fore.LIGHTBLUE_EX + "\n"
+            f"Time (local)               : {wapi['time']}\n"
+            f"Temperature Difference     : {abs(temp1 - temp2):.2f}°C      (Avg: {(temp1 + temp2) / 2:.2f} °C)\n"
+            f"Conditions                 : {wapi['condition']} vs {openw['condition']}\n"
+            f"Wind Speed Difference      : {abs(wind_speed1 - wind_speed2):.2f} km/h   (Avg: {(wind_speed1 + wind_speed2) / 2:.2f} km/h)\n"
+            f"Humidity Difference        : {abs(humidity1 - humidity2):.2f}%        (Avg: {(humidity1 + humidity2) / 2:.2f}%)\n"
+            f"Pressure Difference        : {abs(pressure1 - pressure2):.2f} mbar   (Avg: {(pressure1 + pressure2) / 2:.2f} mbar)\n"
+            "\n")
+
 
 def calc_average(openw_d: Weather, wapi_d: Weather, wstk_d: Weather) -> None:
     """Print the average of the three providers' current weather."""
