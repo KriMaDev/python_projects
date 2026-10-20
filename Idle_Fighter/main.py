@@ -1,32 +1,27 @@
-from classes import *
-from functions import *
+"""Idle Fighter: pick a class and watch your character fight the Orange Cat boss."""
+import argparse
+
+from classes import Character
+from functions import PRESETS, choose_character, create_character, fight
 
 # ===================================================================
 #                                                                MAIN
 # ===================================================================
 
-player = chooseCharacter()
-enemy  = Character("Orange Cat", "Boss", 3, 2, 0.2, 150, 100, 150, 0.2, 0.2, 0.2)
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--class", dest="spec", type=str.capitalize, choices=list(PRESETS),
+                        help="class to play (asked interactively if omitted)")
+    args = parser.parse_args()
 
-turn = 2
-while player.health > 0 and enemy.health > 0 and turn <= 50:
-    if (turn % 2 == 0):
-        caused_dmg = player.damage
-        enemy.health -= caused_dmg
-        print(f"Inflicted {caused_dmg} Damage to the enemy!")
-        print(f"Enemy health is now {enemy.health}HP!")
-        turn += 1
-    else:
-        caused_dmg = enemy.damage
-        player.health -= caused_dmg
-        print(f"Enemy has inflicted {caused_dmg} Damage to you!")
-        print(f"Your health is now {player.health}HP!")
-        turn += 1
-    
+    try:
+        player = create_character(args.spec) if args.spec else choose_character()
+    except (EOFError, KeyboardInterrupt):
+        print("\nNo class chosen. Bye!")
+        return
+    enemy  = Character("Orange Cat", "Boss", 3, 2, 0.2, 150, 100, 150, 0.2, 0.2, 0.2)
+    fight(player, enemy)
 
-if (player.health <= 0 and enemy.health > 0):
-    print(f"You have been defeated! Enemy still has {enemy.health}HP left!")
-elif (enemy.health <= 0 and player.health > 0):
-    print(f"Enemy has been defeated! You survived with {player.health}HP left!")
-else: 
-    print(f"Draw! Nobody won within the turn limit. Enemy has {enemy.health}HP and you have {player.health}HP left.")
+
+if __name__ == "__main__":
+    main()
