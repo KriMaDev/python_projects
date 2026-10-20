@@ -1,5 +1,6 @@
 """Print, compare and average the weather data from all providers."""
 import time
+from typing import Any
 
 from colorama import Fore
 
@@ -7,10 +8,12 @@ from openweather import fetch_openweather
 from weatherapi import fetch_weatherapi
 from weatherstack import fetch_weatherstack
 
+Weather = dict[str, Any] | None
 
-# Comparison between forecasts
-def compare_forecasts(openw_d, wapi_d, wstk_d):
-    print(Fore.LIGHTGREEN_EX + f"\n        | Data Comparing |")
+
+def compare_forecasts(openw_d: Weather, wapi_d: Weather, wstk_d: Weather) -> None:
+    """Print where the three providers agree or differ for the current weather."""
+    print(Fore.LIGHTGREEN_EX + "\n        | Data Comparing |")
 
     if openw_d and wapi_d and wstk_d:
 
@@ -67,11 +70,11 @@ def compare_forecasts(openw_d, wapi_d, wstk_d):
             print(Fore.GREEN + "All forecasts report the same visibility.")
     
     else:
-        print(Fore.RED + f"ERROR_07: Comparing data")
+        print(Fore.RED + "ERROR_07: Comparing data")
         return None
 
-# Comparison between hourly & daily forecasts
-def compare_future_forecasts(forecast1, forecast2, forecast_type='hourly'):
+def compare_future_forecasts(forecast1: list[dict[str, Any]], forecast2: list[dict[str, Any]], forecast_type: str = 'hourly') -> None:
+    """Print the difference and average between two hourly or daily forecasts, entry by entry."""
     print(Fore.LIGHTBLUE_EX + f"\n        | Future Average Forecast ({forecast_type}) |\n\n")
     
     try:
@@ -125,8 +128,8 @@ def compare_future_forecasts(forecast1, forecast2, forecast_type='hourly'):
         print(Fore.RED + f"ERROR_08: Comparing future forecast data: {e}")
         return None
 
-# Calculate average results
-def calc_average(openw_d, wapi_d, wstk_d):
+def calc_average(openw_d: Weather, wapi_d: Weather, wstk_d: Weather) -> None:
+    """Print the average of the three providers' current weather."""
     if openw_d and wapi_d and wstk_d:
         # Simple Variables
         temperature = (openw_d['temp'] + wapi_d['temp'] + wstk_d['temp']) / 3
@@ -153,11 +156,11 @@ def calc_average(openw_d, wapi_d, wstk_d):
         else:
             print(Fore.LIGHTGREEN_EX + f"Statuses for rain are  : | {openw_d['rain']} | {wapi_d['rain']} | {wstk_d['rain']} |")
     else:
-        print(Fore.RED + f"ERROR_09: Calculating average")
+        print(Fore.RED + "ERROR_09: Calculating average")
         return None
 
-# Display forecast & comparisson results
-def show_forecast_results(city):
+def show_forecast_results(city: str) -> None:
+    """Fetch the current weather from all providers and print each report, the comparison and the average."""
     openw_d = fetch_openweather(city)
     wapi_d  = fetch_weatherapi(city)
     wstk_d  = fetch_weatherstack(city)
@@ -182,7 +185,7 @@ def show_forecast_results(city):
                 f"Rain              : {openw_d['rain']}\n"
             )
         else:
-            print(Fore.RED + f"ERROR_10: Couldn't fetch OpenWeather!\n")
+            print(Fore.RED + "ERROR_10: Couldn't fetch OpenWeather!\n")
 
         # WeatherAPI Data Printing
         if wapi_d:
@@ -207,7 +210,7 @@ def show_forecast_results(city):
                 f"Rain              : {wapi_d['rain']}\n"
             )
         else:
-            print(Fore.RED + f"ERROR_11: Couldn't fetch WeatherAPI!\n")
+            print(Fore.RED + "ERROR_11: Couldn't fetch WeatherAPI!\n")
 
         # WeatherStack Data Printing
         if wstk_d:
@@ -225,7 +228,7 @@ def show_forecast_results(city):
                 f"Rain              : {wstk_d['rain']}\n"
             )
         else:
-            print(Fore.RED + f"ERROR_12: Couldn't fetch WeatherStack!\n")
+            print(Fore.RED + "ERROR_12: Couldn't fetch WeatherStack!\n")
         
         # Compare Data From All Forecasts
         compare_forecasts(openw_d, wapi_d, wstk_d)
@@ -233,5 +236,5 @@ def show_forecast_results(city):
         calc_average(openw_d, wapi_d, wstk_d)
 
     else:
-        print(Fore.RED + f"ERROR_13: Couldn't fetch anything...\n")
+        print(Fore.RED + "ERROR_13: Couldn't fetch anything...\n")
         return None

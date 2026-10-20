@@ -1,28 +1,27 @@
 """Hourly and daily forecasts from WeatherAPI and OpenWeather."""
-import requests
+from typing import Any
+
 from colorama import Fore
 
+from api_client import get_json
 from config import OPENWEATHER_API_KEY, WEATHERAPI_API_KEY, has_key
 
+WEATHERAPI_FORECAST_URL  = "https://api.weatherapi.com/v1/forecast.json"
+OPENWEATHER_FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast"
 
-# Fetch hourly forecasts from WeatherAPI & OpenWeather
-def fetch_hourly_forecasts(city):
+
+def fetch_hourly_forecasts(city: str) -> dict[str, list[dict[str, Any]]] | None:
+    """Fetch today's hourly forecast from WeatherAPI and OpenWeather, or None if either fails."""
     if not (has_key("WEATHERAPI_API_KEY", WEATHERAPI_API_KEY) and has_key("OPENWEATHER_API_KEY", OPENWEATHER_API_KEY)):
         return None
     try:
-        # Fetch hourly forecast from WeatherAPI
-        weatherapi_url  = f"https://api.weatherapi.com/v1/forecast.json?key={WEATHERAPI_API_KEY}&q={city}&hours=24"
-        wapi_response   = requests.get(weatherapi_url)
-        wapi_data       = wapi_response.json()
+        wapi_data = get_json(WEATHERAPI_FORECAST_URL, {"key": WEATHERAPI_API_KEY, "q": city, "hours": 24})
     except Exception as e:
         print(Fore.RED + f"ERROR_03: Fetching hourly forecast from WeatherAPI: {e}")
         return None
 
     try:
-        # Fetch hourly forecast from OpenWeather
-        openweather_url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={OPENWEATHER_API_KEY}&units=metric"
-        openw_response  = requests.get(openweather_url)
-        openw_data      = openw_response.json()
+        openw_data = get_json(OPENWEATHER_FORECAST_URL, {"q": city, "appid": OPENWEATHER_API_KEY, "units": "metric"})
     except Exception as e:
         print(Fore.RED + f"ERROR_04: Fetching hourly forecast from OpenWeather: {e}")
         return None
@@ -32,31 +31,18 @@ def fetch_hourly_forecasts(city):
         "openweather": openw_data.get("list", [])
     }
 
-# Fetch daily forecasts from WeatherAPI & OpenWeather
-def fetch_daily_forecasts(city):
+
+def fetch_daily_forecasts(city: str) -> dict[str, list[dict[str, Any]]] | None:
+    """Fetch a 3 day forecast from WeatherAPI, or None if it fails.
+
+    Not shown in the report yet: the OpenWeather daily endpoint (One Call) needs a separate
+    One Call 3.0 subscription, so there is nothing to compare it with.
+    """
     if not has_key("WEATHERAPI_API_KEY", WEATHERAPI_API_KEY):
         return None
     try:
-        # Fetch daily forecast from WeatherAPI
-        weatherapi_url  = f"https://api.weatherapi.com/v1/forecast.json?key={WEATHERAPI_API_KEY}&q={city}&days=3"
-        wapi_response   = requests.get(weatherapi_url)
-        wapi_data       = wapi_response.json()
+        wapi_data = get_json(WEATHERAPI_FORECAST_URL, {"key": WEATHERAPI_API_KEY, "q": city, "days": 3})
     except Exception as e:
         print(Fore.RED + f"ERROR_05: Fetching daily forecast from WeatherAPI: {e}")
         return None
-    '''
-    try:
-        # Use OpenWeather One Call API for daily forecasts
-        openweather_url = f"https://api.openweathermap.org/data/2.5/onecall?lat={wapi_data['location']['lat']}&lon={wapi_data['location']['lon']}&exclude=hourly,minutely&appid={OPENWEATHER_API_KEY}&units=metric"
-        openw_response  = requests.get(openweather_url)
-        openw_data      = openw_response.json()
-    except Exception as e:
-        print(Fore.RED + f"ERROR_06: Fetching daily forecast from OpenWeather: {e}")
-        return None
-    print(f"\n\n{wapi_data} \n--------\n{openw_data}\n\n") # TODO OpenWeather Data is not received ok!!
-    return {
-        "weatherapi": wapi_data.get("forecast", {}).get("forecastday", []),
-        "openweather": openw_data.get("daily", [])
-    }
-    '''
     return {"weatherapi": wapi_data.get("forecast", {}).get("forecastday", [])}

@@ -1,68 +1,50 @@
 """Current weather from WeatherAPI."""
-import requests
+from typing import Any
+
 from colorama import Fore
 
+from api_client import get_json
 from config import WEATHERAPI_API_KEY, has_key
 
+URL        = "https://api.weatherapi.com/v1/current.json"
+RAIN_TYPES = {'Light drizzle', 'Rain', 'Moderate rain', 'Light rain'}
 
-# Fetch weather from WeatherAPI
-def fetch_weatherapi(city):
+
+def parse_weatherapi(data: dict[str, Any]) -> dict[str, Any]:
+    """Pick the fields used in the report from a WeatherAPI response."""
+    location  = data['location']
+    current   = data['current']
+    condition = current['condition']['text']
+    return {
+        "condition": condition,
+        "rain": condition in RAIN_TYPES,
+        "region": location['region'],
+        "country": location['country'],
+        "lat": location['lat'],
+        "lon": location['lon'],
+        "localtime": location['localtime'],
+        "temp": current['temp_c'],
+        "feels": current['feelslike_c'],
+        "humidity": current['humidity'],
+        "w_temp": current['windchill_c'],
+        "w_spd": current['wind_kph'],
+        "w_deg": current['wind_degree'],
+        "w_dir": current['wind_dir'],
+        "gust_spd": current['gust_kph'],
+        "mbar_p": current['pressure_mb'],
+        "in_p": current['pressure_in'],
+        "vision": current['vis_km'],
+        "uv": current['uv'],
+    }
+
+
+def fetch_weatherapi(city: str) -> dict[str, Any] | None:
+    """Fetch the current weather for a city, or None if it fails."""
     if not has_key("WEATHERAPI_API_KEY", WEATHERAPI_API_KEY):
         return None
-    url = f"https://api.weatherapi.com/v1/current.json?key={WEATHERAPI_API_KEY}&q={city}"
     try:
-        # Get full data
-        response = requests.get(url)
-        data     = response.json()
-        # print(f"WeatherAPI response:\n{data}\n")
-        # Create needed vars with data
-        region    = data['location']['region']
-        country   = data['location']['country']
-        lat       = data['location']['lat']
-        lon       = data['location']['lon']
-        local_t   = data['location']['localtime']
-        temp      = data['current']['temp_c']
-        feels     = data['current']['feelslike_c']
-        humidity  = data['current']['humidity']
-        wind_temp = data['current']['windchill_c']
-        wind_spd  = data['current']['wind_kph']
-        wind_deg  = data['current']['wind_degree']
-        wind_dir  = data['current']['wind_dir']
-        gust_spd  = data['current']['gust_kph']
-        mbar_pres = data['current']['pressure_mb']
-        in_pres   = data['current']['pressure_in']
-        vision    = data['current']['vis_km']
-        uv        = data['current']['uv']
-        # Condition & Rain Status
-        condition = data['current']['condition']['text']
-        rain_type = {'Light drizzle', 'Rain', 'Moderate rain', 'Light rain'}
-        rain = False
-        for rtype in rain_type:
-            if rtype == data['current']['condition']['text']:
-                rain = True
-
-        return {
-            "condition": condition,
-            "rain": rain,
-            "region": region,
-            "country": country,
-            "lat": lat,
-            "lon": lon,
-            "localtime": local_t,
-            "temp": temp,
-            "feels": feels,
-            "humidity": humidity,
-            "w_temp": wind_temp,
-            "w_spd": wind_spd,
-            "w_deg": wind_deg,
-            "w_dir": wind_dir,
-            "gust_spd": gust_spd,
-            "mbar_p": mbar_pres,
-            "in_p": in_pres,
-            "vision": vision,
-            "uv": uv
-        }
-    
+        data = get_json(URL, {"key": WEATHERAPI_API_KEY, "q": city})
+        return parse_weatherapi(data)
     except Exception as e:
         print(Fore.RED + f"ERROR_01 Fetching from WeatherAPI: {e}")
         return None
