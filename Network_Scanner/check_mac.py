@@ -5,11 +5,11 @@
 import requests
 
 # Check type of user input
-chk = input("'1 + Enter' to manually enter MAC Address \n'2 + Enter' to use predefined MAC Address: 20:28:bc:25:27:8e\n: ")
+chk = input("'1 + Enter' to manually enter MAC Address \n'2 + Enter' to use predefined MAC Address: AA:BB:CC:DD:EE:FF\n: ")
 if chk == "1":
     mac_address = input("Enter MAC Address: ")
 elif chk == "2":
-    mac_address = "20:28:bc:25:27:8e"
+    mac_address = "AA:BB:CC:DD:EE:FF"
 else:
     print("Invalid option. Exiting.")
     exit()

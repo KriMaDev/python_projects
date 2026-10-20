@@ -1,3 +1,10 @@
-**\key_consts.py
-**\__pycache__
-**\OOP
+# Secrets (API keys) - never commit
+key_consts.py
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local experiments
+OOP/
