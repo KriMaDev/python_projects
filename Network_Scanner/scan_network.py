@@ -14,9 +14,14 @@ from scapy.all import ARP, Ether, srp
 
 def get_default_range() -> str:
     """Return the /24 subnet of this machine's IP address, e.g. 192.168.1.23/24."""
-    # Automatically get the machine's IP address and derive the subnet
-    hostname = socket.gethostname()
-    local_ip = socket.gethostbyname(hostname)
+    # Use the IP of the adapter that has the default route. Connecting a UDP socket sends
+    # no packets, it only picks the route (gethostbyname often returns a VirtualBox/VPN adapter)
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.connect(("8.8.8.8", 80))
+            local_ip = s.getsockname()[0]
+    except OSError:
+        local_ip = socket.gethostbyname(socket.gethostname())
     return f"{local_ip}/24"
 
 
