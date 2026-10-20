@@ -36,12 +36,12 @@ class HeroClass:
 
 # Starting stats per class
 CLASSES = {
-    "Melee":    HeroClass("Sir Smacks-a-Lot", Stats(15,   0.15, 3,   100, 50,  50,  1,   0.5, 1),   Cleave()),
+    "Melee":    HeroClass("Sir Smacks-a-Lot", Stats(16,   0.20, 3,   110, 50,  50,  1.5, 1.5, 1),   Cleave()),
     "Ranged":   HeroClass("Robin Hoodie",     Stats(20,   0.25, 3.5, 50,  75,  50,  0.7, 1,   0.7), AimedShot()),
     "Tank":     HeroClass("Captain Bulwark",  Stats(7.5,  0.15, 4.5, 150, 25,  150, 2,   1.5, 2),   ShieldWall()),
-    "Support":  HeroClass("Medic Molly",      Stats(12,   0.35, 2.5, 75,  75,  100, 1.5, 1.5, 1),   Heal()),
-    "Assassin": HeroClass("Mister Ladybug",   Stats(35,   0.45, 4,   25,  75,  25,  1,   1,   1),   Backstab()),
-    "Mage":     HeroClass("Perry Hotter",     Stats(25,   0.55, 2.5, 25,  100, 150, 1,   2,   2),   Fireball()),
+    "Support":  HeroClass("Medic Molly",      Stats(15,   0.35, 2.5, 75,  75,  100, 1.5, 2,   1),   Heal()),
+    "Assassin": HeroClass("Mister Ladybug",   Stats(35,   0.45, 4,   40,  75,  30,  1,   1.5, 1),   Backstab()),
+    "Mage":     HeroClass("Perry Hotter",     Stats(25,   0.55, 2.5, 40,  100, 150, 1,   2,   2),   Fireball()),
     "Debuffer": HeroClass("Asmodeus",         Stats(17.5, 0.40, 3,   75,  75,  100, 0.5, 1,   0.5), Weaken()),
 }
 
