@@ -68,7 +68,7 @@ def compare_forecasts(openw_d: Weather, wapi_d: Weather, wstk_d: Weather) -> Non
             print(Fore.YELLOW + f"The visibility difference is {max_visibility - min_visibility:.2f} km between the forecasts.")
         else:
             print(Fore.GREEN + "All forecasts report the same visibility.")
-    
+
     else:
         print(Fore.RED + "ERROR_07: Comparing data")
         return None
@@ -76,7 +76,7 @@ def compare_forecasts(openw_d: Weather, wapi_d: Weather, wstk_d: Weather) -> Non
 def compare_future_forecasts(forecast1: list[dict[str, Any]], forecast2: list[dict[str, Any]], forecast_type: str = 'hourly') -> None:
     """Print the difference and average between two hourly or daily forecasts, entry by entry."""
     print(Fore.LIGHTBLUE_EX + f"\n        | Future Average Forecast ({forecast_type}) |\n\n")
-    
+
     try:
         for i in range(min(len(forecast1), len(forecast2))):
             if forecast_type == 'hourly':
@@ -84,34 +84,34 @@ def compare_future_forecasts(forecast1: list[dict[str, Any]], forecast2: list[di
                 time1 = forecast1[i]['time'] if 'time' in forecast1[i] else forecast1[i].get('dt_txt')
                 temp1 = forecast1[i].get('temp_c', forecast1[i].get('main', {}).get('temp'))
                 temp2 = forecast2[i].get('temp_c', forecast2[i].get('main', {}).get('temp'))
-                
+
                 condition1 = forecast1[i].get('condition', {}).get('text', forecast1[i].get('weather', [{}])[0].get('description'))
                 condition2 = forecast2[i].get('weather', [{}])[0].get('description')
-                
+
                 wind_speed1 = forecast1[i].get('wind_kph', forecast1[i].get('wind', {}).get('speed'))
                 wind_speed2 = forecast2[i].get('wind', {}).get('speed')
-                
+
                 humidity1 = forecast1[i].get('humidity')
                 humidity2 = forecast2[i].get('main', {}).get('humidity')
-                
+
                 pressure1 = forecast1[i].get('pressure_mb', forecast1[i].get('main', {}).get('pressure'))
                 pressure2 = forecast2[i].get('main', {}).get('pressure')
-            
+
             elif forecast_type == 'daily':
                 # Extract daily data
                 time1 = forecast1[i].get('date')  # WeatherAPI date
                 temp1 = forecast1[i].get('day', {}).get('avgtemp_c', forecast1[i].get('temp', {}).get('day'))  # WeatherAPI temp
                 temp2 = forecast2[i].get('temp', {}).get('day')  # OpenWeather daily temp
-                
+
                 condition1 = forecast1[i].get('day', {}).get('condition', {}).get('text')
                 condition2 = forecast2[i].get('weather', [{}])[0].get('description')
-                
+
                 wind_speed1 = forecast1[i].get('day', {}).get('maxwind_kph')
                 wind_speed2 = forecast2[i].get('wind_speed')
-                
+
                 humidity1 = forecast1[i].get('day', {}).get('avghumidity')
                 humidity2 = forecast2[i].get('humidity')
-                
+
                 pressure1 = forecast1[i].get('day', {}).get('pressure_mb')
                 pressure2 = forecast2[i].get('pressure')
 
@@ -194,8 +194,8 @@ def show_forecast_results(city: str) -> None:
                 f"Temperature       : {wapi_d['temp']} °C\n"
                 f"Feels Like        : {wapi_d['feels']} °C\n"
                 f"Humidity          : {wapi_d['humidity']} %\n"
-                f"Pressure          : {wapi_d['mbar_p']} mbar\n" 
-                f"Visibility        : {wapi_d['vision']} km\n"      
+                f"Pressure          : {wapi_d['mbar_p']} mbar\n"
+                f"Visibility        : {wapi_d['vision']} km\n"
                 f"Region            : {wapi_d['region']}\n"
                 f"Country           : {wapi_d['country']}\n"
                 f"Local Time        : {wapi_d['localtime']}\n"
@@ -229,7 +229,7 @@ def show_forecast_results(city: str) -> None:
             )
         else:
             print(Fore.RED + "ERROR_12: Couldn't fetch WeatherStack!\n")
-        
+
         # Compare Data From All Forecasts
         compare_forecasts(openw_d, wapi_d, wstk_d)
         # Show Calculated Average Forecast Data

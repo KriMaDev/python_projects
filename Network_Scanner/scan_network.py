@@ -39,7 +39,7 @@ def scan_network(ip_range: str) -> list[dict[str, Any]]:
 
     # Parse the responses
     devices = []
-    for sent, received in result:
+    for _sent, received in result:
         # Append resolved data from the received packet
         try:
             hostname = socket.gethostbyaddr(received.psrc)[0]
