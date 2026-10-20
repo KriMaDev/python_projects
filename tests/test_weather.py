@@ -4,6 +4,7 @@ import requests
 import api_client
 from api_client import ApiError, error_message, get_json
 from config import has_key
+from forecasts import pair_hourly_forecasts
 from openweather import parse_openweather
 from weather import parse_yes_no
 from weatherapi import parse_weatherapi
@@ -96,3 +97,52 @@ def test_has_key_explains_missing_key(capsys):
     assert has_key("OPENWEATHER_API_KEY", "abc") is True
     assert has_key("OPENWEATHER_API_KEY", "") is False
     assert ".env.example" in capsys.readouterr().out
+
+
+# ---------------------------------------------------------------- hourly forecast pairing
+
+NOW  = 1_800_000_000  # a whole hour in UTC
+HOUR = 3600
+
+
+def wapi_hours(offset=0):
+    """48 WeatherAPI hours starting 10 hours ago, shifted by offset seconds (the city's time zone)."""
+    return [{"time_epoch": NOW + (i - 10) * HOUR + offset, "time": f"local-{i}", "temp_c": 10.0, "condition": {"text": "Sunny"},
+             "wind_kph": 20.0, "humidity": 60, "pressure_mb": 1010} for i in range(48)]
+
+
+def openw_slots():
+    """5 days of OpenWeather 3-hour slots starting now."""
+    return [{"dt": NOW + i * 3 * HOUR, "dt_txt": f"utc-{i}", "main": {"temp": 12.0, "humidity": 70, "pressure": 1012},
+             "weather": [{"description": "clear sky"}], "wind": {"speed": 5}} for i in range(40)]
+
+
+def test_pair_hourly_forecasts_matches_on_timestamp():
+    pairs = pair_hourly_forecasts(wapi_hours(), openw_slots(), now=NOW)
+
+    assert len(pairs) == 9  # slots at +0h, +3h, ... +24h
+    for wapi, openw in pairs:
+        assert wapi["epoch"] == openw["epoch"]
+    assert pairs[1][0]["time"] == "local-13"  # 10 hours back + 3 hours ahead
+
+
+def test_pair_hourly_forecasts_converts_openweather_wind_to_kmh():
+    wapi, openw = pair_hourly_forecasts(wapi_hours(), openw_slots(), now=NOW)[0]
+    assert openw["wind_kph"] == pytest.approx(18)  # 5 m/s
+    assert wapi["wind_kph"] == 20.0
+
+
+def test_pair_hourly_forecasts_handles_half_hour_time_zones():
+    pairs = pair_hourly_forecasts(wapi_hours(offset=30 * 60), openw_slots(), now=NOW)
+    assert len(pairs) == 9
+
+
+def test_pair_hourly_forecasts_skips_times_too_far_apart():
+    # A single WeatherAPI hour exactly between two OpenWeather slots (1.5 hours from both)
+    lonely_hour = [hour for hour in wapi_hours(offset=30 * 60) if hour["time_epoch"] == NOW + 90 * 60]
+    assert len(lonely_hour) == 1
+    assert pair_hourly_forecasts(lonely_hour, openw_slots(), now=NOW) == []
+
+
+def test_pair_hourly_forecasts_without_weatherapi_data():
+    assert pair_hourly_forecasts([], openw_slots(), now=NOW) == []
