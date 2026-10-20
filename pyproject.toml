@@ -1,0 +1,25 @@
+# Tool configuration only. Each folder is a standalone script, not an installable package.
+
+[tool.ruff]
+target-version = "py310"
+line-length = 140
+extend-exclude = ["OOP"]
+
+[tool.ruff.lint]
+# pycodestyle errors/warnings, pyflakes, import sorting, bugbear, pyupgrade
+select = ["E", "W", "F", "I", "B", "UP"]
+# Long aligned print/format lines are part of the output style of these scripts
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "classes", "functions",                                                 # Idle_Fighter
+    "api_client", "config", "display", "forecasts",                         # Weather_Forecast
+    "openweather", "weatherapi", "weatherstack", "weather",
+    "cr_pr", "coin_list", "check_ip", "check_mac", "scan_network", "merge_pdf",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Each tool imports its sibling modules by name, so every tool folder goes on the path
+pythonpath = ["Crypto_Prices", "Idle_Fighter", "Network_Scanner", "Pdf_Merger", "Weather_Forecast"]
