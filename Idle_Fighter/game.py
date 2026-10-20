@@ -12,6 +12,8 @@ from hero import Hero
 
 RETRY_AFTER_WINS = 5  # after a defeat, farm the previous stage this many times before retrying
 
+# Gets the enemy kind (normal, mini boss, boss) and returns how the hero picks actions in that fight
+ChooserFactory = Callable[[str], ActionChooser]
 # Gets (stage, kind, hero, enemy) before the fight starts
 StartCallback = Callable[[int, str, Fighter, Fighter], None]
 
@@ -28,7 +30,7 @@ class StageResult:
     levels_gained: int = 0
 
 
-def play_stage(hero: Hero, rng: random.Random, choose_action: ActionChooser,
+def play_stage(hero: Hero, rng: random.Random, chooser_for: ChooserFactory,
                on_start: StartCallback | None = None, on_turn: TurnCallback | None = None) -> StageResult:
     """Fight the enemy of the hero's current stage and hand out the rewards. Does not move the hero."""
     stage, kind = hero.stage, stage_kind(hero.stage)
@@ -36,7 +38,8 @@ def play_stage(hero: Hero, rng: random.Random, choose_action: ActionChooser,
     if on_start:
         on_start(stage, kind, fighter, enemy)
 
-    outcome = fight(fighter, enemy, rng, choose_action, on_turn)
+    outcome = fight(fighter, enemy, rng, chooser_for(kind), on_turn)
+    hero.after_fight(fighter, outcome.won)
     result = StageResult(stage, kind, enemy.name, outcome.won, outcome.turns)
     if outcome.won:
         result.gold, result.xp = rewards(stage)

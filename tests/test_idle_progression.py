@@ -9,6 +9,7 @@ from game import RETRY_AFTER_WINS, StageResult, advance, play_stage, retry_now
 from hero import Hero
 from savegame import OFFLINE_CAP_SECONDS, SECONDS_PER_KILL, load_game, offline_rewards, save_game
 from shop import UPGRADES, autobuy, buy, cost
+from tactics import Tactics, auto_chooser
 
 # ---------------------------------------------------------------- enemies
 
@@ -126,7 +127,7 @@ def test_stage_one_defeat_stays_on_stage_one():
 
 def test_play_stage_gives_rewards_for_a_win():
     hero = Hero("Mage")
-    result = play_stage(hero, random.Random(1), main.auto_action)
+    result = play_stage(hero, random.Random(1), lambda kind: auto_chooser(Tactics(), kind))
     assert result.won
     assert (hero.gold, result.gold) == (rewards(1)[0], rewards(1)[0])
     assert hero.stage == 1  # play_stage doesn't move the hero, advance() does
@@ -136,7 +137,8 @@ def test_play_stage_gives_rewards_for_a_win():
 
 def test_save_and_load_round_trip(tmp_path):
     path = tmp_path / "save.json"
-    hero = Hero("Debuffer", level=7, gold=123, stage=12, best_stage=11, upgrades={"damage": 3})
+    hero = Hero("Debuffer", level=7, gold=123, stage=12, best_stage=11, upgrades={"damage": 3},
+                carried_mana=12.5, tactics=Tactics(skill_policy="bosses only", defend_below=0.25, autobuy=True))
     save_game(hero, path)
     loaded = load_game(path)
     assert loaded == hero

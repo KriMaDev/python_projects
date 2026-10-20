@@ -10,6 +10,7 @@ from pathlib import Path
 from characters import CLASSES
 from enemies import NORMAL, rewards
 from hero import Hero
+from tactics import Tactics
 
 SAVE_VERSION = 1
 DEFAULT_SAVE = Path(__file__).resolve().parent / "savegame.json"
@@ -38,6 +39,7 @@ def load_game(path: Path = DEFAULT_SAVE) -> Hero | None:
             raise ValueError(f"unsupported save version {data.get('version')}")
         known = {f.name for f in fields(Hero)}
         hero = Hero(**{key: value for key, value in data["hero"].items() if key in known})
+        hero.tactics = Tactics(**hero.tactics) if isinstance(hero.tactics, dict) else Tactics()
         if hero.spec not in CLASSES:
             raise ValueError(f"unknown class {hero.spec!r}")
         return hero
