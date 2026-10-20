@@ -95,4 +95,4 @@ class Weaken(Ability):
     def use(self, user, target, rng):
         damage, crit = user.attack(target, rng)
         target.damage_multiplier = max(self.MIN_MULTIPLIER, target.damage_multiplier * 0.8)
-        return hit_text(self.name, damage, crit) + f", {target.name} weakened"
+        return hit_text(self.name, damage, crit) + " (-20% dmg)"

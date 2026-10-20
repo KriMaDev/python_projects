@@ -5,36 +5,14 @@ import random
 import time
 from pathlib import Path
 
+import ui
 from characters import CLASSES, Fighter, find_class
 from combat import ActionChooser
-from enemies import BOSS, MINI_BOSS
-from game import ChooserFactory, StageResult, advance, play_stage, retry_now
+from game import ChooserFactory, advance, play_stage, retry_now
 from hero import Hero
 from savegame import DEFAULT_SAVE, load_game, offline_rewards, save_game
 from shop import UPGRADES, autobuy, buy, cost
 from tactics import DEFEND_THRESHOLDS, SKILL_POLICIES, Tactics, auto_chooser, is_boss_fight, manual_action
-
-# ===================================================================
-#                                                              OUTPUT
-# ===================================================================
-
-def print_start(stage: int, kind: str, hero: Fighter, enemy: Fighter) -> None:
-    label = {BOSS: "BOSS", MINI_BOSS: "MINI BOSS"}.get(kind, "Enemy")
-    print(f"\n--- Stage {stage}: {label} {enemy.name} ({enemy.health:.0f} HP, {enemy.shield:.0f} shield) ---")
-
-
-def print_turn(turn: int, hero: Fighter, enemy: Fighter, events: list[str]) -> None:
-    print(f"T{turn:<3} {' | '.join(events):<45} You {hero.health:.0f} HP  {enemy.name} {enemy.health:.0f} HP")
-
-
-def print_result(result: StageResult) -> None:
-    if result.won:
-        text = f"Won in {result.turns} turns: +{result.gold} gold, +{result.xp} XP"
-        if result.levels_gained:
-            text += f", LEVEL UP x{result.levels_gained}!"
-        print(text)
-    else:
-        print(f"Defeated by {result.enemy} after {result.turns} turns.")
 
 # ===================================================================
 #                                                            GAMEPLAY
@@ -53,16 +31,18 @@ def chooser_factory(tactics: Tactics, interactive: bool) -> ChooserFactory:
 def run_fights(hero: Hero, rng: random.Random, save_path: Path, count: int | None = None,
                speed: float = 0.25, interactive: bool = True) -> None:
     """Fight stage after stage until `count` fights are done (forever if None) or Ctrl+C is pressed."""
+    def on_start(stage: int, kind: str, fighter: Fighter, enemy: Fighter) -> None:
+        print(ui.stage_banner(stage, kind, fighter, enemy))
+
     def on_turn(turn: int, fighter: Fighter, enemy: Fighter, events: list[str]) -> None:
-        print_turn(turn, fighter, enemy, events)
+        print(ui.turn_line(turn, fighter, enemy, events))
         time.sleep(speed)
 
     fights = 0
     try:
         while count is None or fights < count:
-            result = play_stage(hero, rng, chooser_factory(hero.tactics, interactive),
-                                on_start=print_start, on_turn=on_turn)
-            print_result(result)
+            result = play_stage(hero, rng, chooser_factory(hero.tactics, interactive), on_start=on_start, on_turn=on_turn)
+            print(ui.result_line(result))
             print(advance(hero, result))
             if hero.tactics.autobuy and (bought := autobuy(hero)):
                 print(f"Bought: {', '.join(bought)}")
@@ -103,7 +83,13 @@ def shop_menu(hero: Hero) -> None:
             print(f"Bought: {', '.join(bought)}" if bought else "You can't afford anything yet.")
         elif choice.isdigit() and 1 <= int(choice) <= len(keys):
             key = keys[int(choice) - 1]
-            print(f"Bought {UPGRADES[key].name}!" if buy(hero, key) else "Not enough gold (or maxed out).")
+            price = cost(key, hero.upgrades.get(key, 0))
+            if price is None:
+                print(f"{UPGRADES[key].name} is already maxed out.")
+            elif buy(hero, key):
+                print(f"Bought {UPGRADES[key].name}!")
+            else:
+                print(f"Not enough gold: {UPGRADES[key].name} costs {price}, you have {hero.gold}.")
         else:
             print("Unknown choice.")
 
@@ -150,8 +136,7 @@ def print_hero(hero: Hero) -> None:
 
 def main_menu(hero: Hero, rng: random.Random, save_path: Path, speed: float) -> None:
     while True:
-        print(f"\n=== Stage {hero.stage} | Lv {hero.level} {hero.name} | {hero.gold} gold | "
-              f"XP {hero.xp}/{hero.xp_needed()} ===")
+        print(ui.header(hero))
         choice = input("[F]ight  [S]hop  [T]actics  [H]ero  [Q]uit\n: ").strip().lower()
         if choice == "f":
             if hero.retry_stage is not None:
@@ -187,6 +172,7 @@ def main() -> None:
     parser.add_argument("--seed", type=int, help="random seed, for reproducible runs")
     args = parser.parse_args()
     rng = random.Random(args.seed)
+    ui.setup_terminal()
 
     try:
         hero = None if args.new else load_game(args.save)
@@ -204,7 +190,7 @@ def main() -> None:
             gold, xp, seconds = offline_rewards(hero)
             if gold:
                 levels = hero.gain(gold, xp)
-                print(f"While you were away for {seconds / 60:.0f} minutes, {hero.name} earned {gold} gold and {xp} XP"
+                print(f"While you were away for {ui.duration(seconds)}, {hero.name} earned {gold} gold and {xp} XP"
                       + (f" and gained {levels} level(s)!" if levels else "."))
         if args.autobuy:
             hero.tactics.autobuy = True
