@@ -13,7 +13,8 @@ ignore = ["E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = [
-    "classes", "functions",                                                 # Idle_Fighter
+    "abilities", "characters", "combat", "enemies", "game", "hero",         # Idle_Fighter
+    "main", "savegame", "shop", "tactics", "ui",
     "api_client", "config", "display", "forecasts",                         # Weather_Forecast
     "openweather", "weatherapi", "weatherstack", "weather",
     "cr_pr", "coin_list", "check_ip", "check_mac", "scan_network", "merge_pdf",

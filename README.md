@@ -10,7 +10,7 @@ does one useful job from the command line, and has its own README with setup ste
 | Tool | What it does | Main libraries |
 |---|---|---|
 | [Crypto_Prices](Crypto_Prices/) | Live crypto prices in the terminal, green/red when they go up/down | requests, colorama, keyboard |
-| [Idle_Fighter](Idle_Fighter/) | Text-based auto battler: pick a class and fight a boss (my first OOP project) | standard library only |
+| [Idle_Fighter](Idle_Fighter/) | Idle auto battler: endless stages, bosses, upgrades, tactics and save games | colorama, dataclasses |
 | [Network_Scanner](Network_Scanner/) | Find devices on your LAN, look up IP owners and VPNs, identify MAC vendors | scapy, ipwhois, requests |
 | [Pdf_Merger](Pdf_Merger/) | Merge all PDFs in a folder into one file | pypdf, colorama |
 | [Weather_Forecast](Weather_Forecast/) | Compare current weather from three weather APIs and the 24-hour forecast from two of them | requests, python-dotenv, colorama |
@@ -47,7 +47,7 @@ the answers as arguments.
 |---|---|---|
 | `Crypto_Prices/cr_pr.py` | `python Crypto_Prices/cr_pr.py --coins bitcoin,solana` | Stop with `esc` or `Ctrl+C` |
 | `Crypto_Prices/coin_list.py` | `python Crypto_Prices/coin_list.py --search solana` | Finds the coin IDs for `cr_pr.py` |
-| `Idle_Fighter/main.py` | `python Idle_Fighter/main.py --class tank` | Asks for a class if omitted |
+| `Idle_Fighter/main.py` | `python Idle_Fighter/main.py --class tank` | Menu-driven; progress is saved automatically |
 | `Network_Scanner/scan_network.py` | `python Network_Scanner/scan_network.py` | Admin/root, Npcap on Windows, [your own network only](Network_Scanner/README.md) |
 | `Network_Scanner/check_ip.py` | `python Network_Scanner/check_ip.py 8.8.8.8` | Asks for an IP if omitted |
 | `Network_Scanner/check_mac.py` | `python Network_Scanner/check_mac.py 00:1A:2B:3C:4D:5E` | Shows a menu if omitted |
