@@ -48,7 +48,7 @@ the answers as arguments.
 | `Crypto_Prices/cr_pr.py` | `python Crypto_Prices/cr_pr.py --coins bitcoin,solana` | Stop with `esc` or `Ctrl+C` |
 | `Crypto_Prices/coin_list.py` | `python Crypto_Prices/coin_list.py --search solana` | Finds the coin IDs for `cr_pr.py` |
 | `Idle_Fighter/main.py` | `python Idle_Fighter/main.py --class tank` | Asks for a class if omitted |
-| `Network_Scanner/scan_network.py` | `python Network_Scanner/scan_network.py --range 192.168.1.0/24` | Admin/root, Npcap on Windows, [your own network only](Network_Scanner/README.md) |
+| `Network_Scanner/scan_network.py` | `python Network_Scanner/scan_network.py` | Admin/root, Npcap on Windows, [your own network only](Network_Scanner/README.md) |
 | `Network_Scanner/check_ip.py` | `python Network_Scanner/check_ip.py 8.8.8.8` | Asks for an IP if omitted |
 | `Network_Scanner/check_mac.py` | `python Network_Scanner/check_mac.py 00:1A:2B:3C:4D:5E` | Shows a menu if omitted |
 | `Pdf_Merger/merge_pdf.py` | `python Pdf_Merger/merge_pdf.py ./scans -o merged.pdf` | Defaults to the current folder |
