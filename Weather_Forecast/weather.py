@@ -1,13 +1,15 @@
 import requests
 from colorama import Fore, init
 import time
-from  key_consts import OPENWEATHER_API_KEY, WEATHERAPI_API_KEY, WEATHERSTACK_API_KEY
+from config import OPENWEATHER_API_KEY, WEATHERAPI_API_KEY, WEATHERSTACK_API_KEY, WEATHERSTACK_HTTPS, has_key
 
 # Initialize colorama for Windows compatibility
 init(autoreset=True)
 
 # Fetch weather from OpenWeather
 def fetch_openweather(city):
+    if not has_key("OPENWEATHER_API_KEY", OPENWEATHER_API_KEY):
+        return None
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={OPENWEATHER_API_KEY}&units=metric"
     try:
         # Get full data
@@ -52,6 +54,8 @@ def fetch_openweather(city):
 
 # Fetch weather from WeatherAPI
 def fetch_weatherapi(city):
+    if not has_key("WEATHERAPI_API_KEY", WEATHERAPI_API_KEY):
+        return None
     url = f"https://api.weatherapi.com/v1/current.json?key={WEATHERAPI_API_KEY}&q={city}"
     try:
         # Get full data
@@ -112,8 +116,11 @@ def fetch_weatherapi(city):
 
 # Fetch weather from WeatherStack
 def fetch_weatherstack(city):
+    if not has_key("WEATHERSTACK_API_KEY", WEATHERSTACK_API_KEY):
+        return None
     # Weatherstack free plan does not allow HTTPS, so this key is sent unencrypted.
-    url = f"http://api.weatherstack.com/current?access_key={WEATHERSTACK_API_KEY}&query={city}"
+    scheme = "https" if WEATHERSTACK_HTTPS else "http"
+    url = f"{scheme}://api.weatherstack.com/current?access_key={WEATHERSTACK_API_KEY}&query={city}"
     try:
         response = requests.get(url)
         data     = response.json()
@@ -205,6 +212,8 @@ def fetch_accuweather_weather(location_key):
 
 # Fetch hourly forecasts from WeatherAPI & OpenWeather
 def fetch_hourly_forecasts(city):
+    if not (has_key("WEATHERAPI_API_KEY", WEATHERAPI_API_KEY) and has_key("OPENWEATHER_API_KEY", OPENWEATHER_API_KEY)):
+        return None
     try:
         # Fetch hourly forecast from WeatherAPI
         weatherapi_url  = f"https://api.weatherapi.com/v1/forecast.json?key={WEATHERAPI_API_KEY}&q={city}&hours=24"
@@ -230,6 +239,8 @@ def fetch_hourly_forecasts(city):
 
 # Fetch daily forecasts from WeatherAPI & OpenWeather
 def fetch_daily_forecasts(city):
+    if not has_key("WEATHERAPI_API_KEY", WEATHERAPI_API_KEY):
+        return None
     try:
         # Fetch daily forecast from WeatherAPI
         weatherapi_url  = f"https://api.weatherapi.com/v1/forecast.json?key={WEATHERAPI_API_KEY}&q={city}&days=3"
