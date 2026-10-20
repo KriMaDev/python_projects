@@ -106,8 +106,15 @@ def main() -> None:
     cash_thread.start()
     exit_thread.start()
 
-    # Keep the main thread alive until the price thread finishes
-    cash_thread.join()
+    # Keep the main thread alive until the price thread finishes.
+    # Join in short steps so Ctrl+C is noticed (a plain join() blocks it on Windows)
+    try:
+        while cash_thread.is_alive():
+            cash_thread.join(0.5)
+    except KeyboardInterrupt:
+        print("Exiting program...")
+        stop_flag.set()
+        cash_thread.join()
 
 
 if __name__ == "__main__":
