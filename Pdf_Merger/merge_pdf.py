@@ -1,12 +1,12 @@
 import os
-from PyPDF2 import PdfMerger
+from pypdf import PdfWriter
 from colorama import Fore, init
 
 init(autoreset=True)
 
 def merge_pdfs(directory, output_filename="output.pdf"):
-    # Initialize PdfMerger object
-    merger = PdfMerger()
+    # Initialize PdfWriter object (PdfMerger is deprecated)
+    merger = PdfWriter()
 
     # List all PDF files in the directory
     pdf_files = [f for f in os.listdir(directory) if f.endswith('.pdf')]
