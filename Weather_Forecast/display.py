@@ -57,7 +57,7 @@ def compare_forecasts(openw_d: Weather, wapi_d: Weather, wstk_d: Weather) -> Non
         max_wind_speed = max(openw_d['w_spd'], wapi_d['w_spd'], wstk_d['w_spd'])
         min_wind_speed = min(openw_d['w_spd'], wapi_d['w_spd'], wstk_d['w_spd'])
         if max_wind_speed != min_wind_speed:
-            print(Fore.YELLOW + f"The wind speed difference is {max_wind_speed - min_wind_speed:.2f} kmh between the forecasts.")
+            print(Fore.YELLOW + f"The wind speed difference is {max_wind_speed - min_wind_speed:.2f} km/h between the forecasts.")
         else:
             print(Fore.GREEN + "All forecasts report the same wind speed.")
 
@@ -142,7 +142,7 @@ def calc_average(openw_d: Weather, wapi_d: Weather, wstk_d: Weather) -> None:
             f"Temperature            : {temperature:.2f} °C\n"
             f"Humidity               : {humidity:.2f} %\n"
             f"Pressure               : {pressure:.2f} mbar (hPa)\n"
-            f"Wind Speed             : {w_speed:.2f} /kmh\n"
+            f"Wind Speed             : {w_speed:.2f} km/h\n"
             f"Visibility             : {vision:.2f} km"
         )
         # Conditions
@@ -180,8 +180,8 @@ def show_forecast_results(city: str) -> None:
                 f"Humidity          : {openw_d['humidity']} %\n"
                 f"Sea Pressure      : {openw_d['s_pressure']} hPa\n"
                 f"Ground Pressure   : {openw_d['g_pressure']} hPa\n"
-                f"Visibillity       : {openw_d['vision']} km\n"
-                f"Wind Speed        : {openw_d['w_spd']:.2f} /kmh\n"
+                f"Visibility        : {openw_d['vision']} km\n"
+                f"Wind Speed        : {openw_d['w_spd']:.2f} km/h\n"
                 f"Rain              : {openw_d['rain']}\n"
             )
         else:
@@ -200,12 +200,12 @@ def show_forecast_results(city: str) -> None:
                 f"Country           : {wapi_d['country']}\n"
                 f"Local Time        : {wapi_d['localtime']}\n"
                 f"Latitude          : {wapi_d['lat']}\n"
-                f"Longtitude        : {wapi_d['lon']}\n"
-                f"Wind Speed        : {wapi_d['w_spd']} /kmh\n"
+                f"Longitude         : {wapi_d['lon']}\n"
+                f"Wind Speed        : {wapi_d['w_spd']} km/h\n"
                 f"Wind Temperature  : {wapi_d['w_temp']} °C\n"
                 f"Wind Degree       : {wapi_d['w_deg']} °\n"
                 f"Wind Direction    : {wapi_d['w_dir']}\n"
-                f"Gust Speed        : {wapi_d['gust_spd']} /kmh\n"
+                f"Gust Speed        : {wapi_d['gust_spd']} km/h\n"
                 f"UV Index          : {wapi_d['uv']}\n"
                 f"Rain              : {wapi_d['rain']}\n"
             )
@@ -221,7 +221,7 @@ def show_forecast_results(city: str) -> None:
                 f"Humidity          : {wstk_d['humidity']} %\n"
                 f"Pressure          : {wstk_d['pressure']} mbar\n"
                 f"Visibility        : {wstk_d['vision']} km\n"
-                f"Wind Speed        : {wstk_d['w_spd']} /kmh\n"
+                f"Wind Speed        : {wstk_d['w_spd']} km/h\n"
                 f"Wind Degree       : {wstk_d['w_deg']} °\n"
                 f"Wind Direction    : {wstk_d['w_dir']}\n"
                 f"UV Index          : {wstk_d['uv']}\n"
